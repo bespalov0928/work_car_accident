@@ -10,7 +10,16 @@
         </tr>
         <tr>
             <td>Описание:</td>
-            <td><input type='text' name='text'></td>
+            <td>
+                <textarea name="text"
+                          style="padding-bottom:250px;
+                            font-size:16px;
+                            height: 300px;
+                            width: 500px;">
+
+                </textarea>
+            </td>
+<%--            <td><input type='text' name='text'></td>--%>
         </tr>
         <tr>
             <td>Адрес:</td>
