@@ -20,5 +20,7 @@
         <mapping class="ru.work.accident.model.Accident" />
         <mapping class="ru.work.accident.model.AccidentType" />
         <mapping class="ru.work.accident.model.Rule" />
+        <mapping class="ru.work.accident.model.Authority" />
+        <mapping class="ru.work.accident.model.User" />
     </session-factory>
 </hibernate-configuration>
