@@ -1,8 +1,13 @@
 package ru.work.accident.model;
 
+import javax.persistence.*;
 import java.util.Objects;
 
+@Entity
+@Table(name = "rules")
 public class Rule {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     public String name;
 
@@ -12,6 +17,7 @@ public class Rule {
         rule.name = name;
         return rule;
     }
+
     public int getId() {
         return id;
     }
@@ -29,16 +35,20 @@ public class Rule {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Rule rule = (Rule) o;
-        return id == rule.id;
-    }
-
-    @Override
     public int hashCode() {
         return Objects.hash(id);
     }
 
+    @Override
+    public boolean equals(Object obj) {
+
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        Rule rule = (Rule) obj;
+        return id == rule.id;
+    }
 }

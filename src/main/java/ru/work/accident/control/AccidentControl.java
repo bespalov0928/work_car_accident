@@ -9,35 +9,26 @@ import org.springframework.web.bind.annotation.RequestParam;
 import ru.work.accident.model.Accident;
 import ru.work.accident.model.AccidentType;
 import ru.work.accident.model.Rule;
-import ru.work.accident.repository.AccidentMem;
+import ru.work.accident.service.AccidentServiceSpring;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
+
 
 @Controller
 public class AccidentControl {
-    private final AccidentMem accidents;
-
-    public AccidentControl(AccidentMem accidents) {
+    private final AccidentServiceSpring accidents;
+    public AccidentControl(AccidentServiceSpring accidents) {
         this.accidents = accidents;
     }
 
-//    public AccidentControl() {}
-
     @GetMapping("/create")
     public String create(Model model) {
-        List<AccidentType> types = new ArrayList<>();
-        types.add(AccidentType.of(1, "Две машины"));
-        types.add(AccidentType.of(2, "Машина и человек"));
-        types.add(AccidentType.of(3, "Машина и велосипед"));
+
+        List<AccidentType> types = accidents.findAllAccidentType();
         model.addAttribute("types", types);
-        List<Rule> rules = new ArrayList<>();
-        rules.add(Rule.of(1, "Статья. 1"));
-        rules.add(Rule.of(2, "Статья. 2"));
-        rules.add(Rule.of(3, "Статья. 3"));
+
+        List<Rule> rules = accidents.findAllRule();
         model.addAttribute("rules", rules);
 
         return "accident/create";
@@ -46,17 +37,9 @@ public class AccidentControl {
 
     @PostMapping("/save")
     public String save(@ModelAttribute Accident accident, HttpServletRequest req) {
+
         String[] idArray = req.getParameterValues("rIds");
-        String[] idArrayType = req.getParameterValues("type.id");
-
-        Rule rule = accidents.findByIdRule(Integer.valueOf(Arrays.stream(idArray).findFirst().get()));
-        AccidentType accidentType = accidents.findByIdType(Integer.valueOf(Arrays.stream(idArrayType).findFirst().get()));
-
-        accident.addRule(rule);
-        accident.setType(accidentType);
-
-        accidents.add(accident);
-        String[] ids = req.getParameterValues("rIds");
+        accidents.add(accident, idArray);
         return "redirect:/";
     }
 
@@ -64,8 +47,9 @@ public class AccidentControl {
     public String update(@RequestParam("id") int id, Model model) {
         List<AccidentType> types = accidents.findAllAccidentType();
         List<Rule> rules = accidents.findAllRule();
+        Accident accident = accidents.findById(id);
         model.addAttribute("types", types);
-        model.addAttribute("accident", accidents.findById(id));
+        model.addAttribute("accident", accident);
         model.addAttribute("rules", rules);
         return "accident/update";
     }
